@@ -53,7 +53,7 @@ export default class DoctorList extends Component {
             this.setState(obj,() => {console.log(this.state)});
         })
         .catch(err => {
-            console.log('DoctorListComponent error: ',err)
+            console.log('DoctorListComponent server error: ',err)
             alert('something went wrong')
             this.setState({loading:false})
         })
@@ -99,7 +99,7 @@ export default class DoctorList extends Component {
                 this.setState(obj);
             })
             .catch(err => {
-                console.log('DoctorListComponent error: ',err)
+                console.log('DoctorListComponent server error: ',err)
                 alert('something went wrong')
                 this.setState({loading:false})
             })
@@ -150,7 +150,7 @@ export default class DoctorList extends Component {
                 this.setState(obj);
             })
             .catch(err => {
-                console.log('DoctorListComponent error: ',err)
+                console.log('DoctorListComponent server error: ',err)
                 alert('something went wrong')
                 this.setState({loading:false})
             })

@@ -1,0 +1,31 @@
+.AddDoctorNavHeader {
+    margin: 15px;
+}
+
+.AddDoctorNavItem {
+    cursor: pointer;
+}
+
+.AddDoctorNavLink {
+    color: black !important;
+}
+
+.AddDoctorNavItem:hover {
+    border:none !important;
+    background-color: lightblue !important;
+    font-weight: 600;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.activeTab {
+    border-top: none !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-bottom: 1px solid blueviolet;
+    background-color: blueviolet;
+    color:white !important;
+    font-weight: 600;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}

@@ -1,0 +1,54 @@
+.HeaderText {
+    margin: 20px;
+}
+
+.doctorTimingForm {
+    margin: 20px;
+}
+
+.childDays {
+    font-size: 30px;
+    color: gray;
+}
+
+.addTimeBtn {
+    margin-top: 5px;
+    font-size: 15px;
+}
+
+.addTimeBtn:focus, .addTimeBtn:active, 
+.timeDeleteBtn:focus, .timeDeleteBtn:active,
+.timeSubmitBtn:focus, .timeSubmitBtn:active {
+    box-shadow: none !important;
+    outline: none !important;
+    outline-style: none !important;
+}
+
+.timeDeleteBtn {
+    margin: 24px 0px 16px 0px;
+}
+
+.selectTimedd {
+    margin: 25px 0px 15px 0px;
+
+}
+
+.timeSubmitBtn {
+    background-color: blueviolet;
+    color: white;
+    width: 100px;
+    padding: 5px;
+    margin-bottom: 40px;
+    border-radius: 20px;
+}
+
+.timeSubmitBtn:hover {
+    background-color: teal;
+    font-weight: 600;
+}
+
+.validationError {
+    color: red;
+    font-weight: 500;
+}
+

@@ -1,0 +1,47 @@
+
+.HeaderText {
+    margin: 20px;
+}
+
+.doctorInfoForm {
+    margin: 20px;
+
+}
+
+.childCheckboxLanguage {
+    min-width: auto;
+    margin-right: 20px;
+    padding-bottom: 5px;
+}
+
+.allLangulageCheckbox {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.formSubmitBtn {
+    background-color: blueviolet;
+    color: white;
+    width: 100px;
+    padding: 5px;
+    margin-bottom: 30px;
+    border-radius: 20px;
+}
+
+.formSubmitBtn:hover {
+    background-color: teal;
+    font-weight: 600;
+}
+
+.formSubmitBtn:focus, .formSubmitBtn:active {
+    box-shadow: none !important;
+    outline: none !important;
+    outline-style: none !important;
+}
+
+.validationError {
+    color: red;
+    font-weight: 500;
+}
