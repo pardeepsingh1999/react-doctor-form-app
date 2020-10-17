@@ -4,6 +4,7 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
+  NavLink,
   Link,
   Redirect
 } from "react-router-dom";
@@ -24,27 +25,29 @@ import AddedDoctorList from './AddedDoctorList';
 function App() {
 
   const [isOpen, setIsOpen] = useState(false);
-  const [activeLink, setActiveLink] = useState('');
+  // const [activeLink, setActiveLink] = useState('');
 
   const toggle = () => setIsOpen(!isOpen);
 
   useEffect(() => {
     console.log('app useEffect: ', window.location.href)
-    const componentLinkName = window.location.href.split('/')[3] ? 
-                              window.location.href.split('/')[3] : '';
-    setActiveLink(componentLinkName)
+    // const componentLinkName = window.location.href.split('/')[3] ? 
+    //                           window.location.href.split('/')[3] : '';
+    // setActiveLink(componentLinkName)
   },[])
   
-  const activeNavLink = (navLinkName) => {
-    setActiveLink(navLinkName)
-  }
+  // const activeNavLink = (navLinkName) => {
+  //   setActiveLink(navLinkName)
+  // }
 
   return (
     <div className={classes.App}>
       <Router>
 
         <Navbar color="dark" dark expand="md">
-          <div className="pt-1 pb-1" onClick={() => activeNavLink('doctor-list')}>
+          <div className="pt-1 pb-1" 
+          // onClick={() => activeNavLink('doctor-list')}
+          >
             <Link to="/doctor-list" className={classes.NavbarBrandLink}>
               DOCTOR
             </Link>
@@ -53,35 +56,41 @@ function App() {
           <NavbarToggler onClick={toggle} />
           <Collapse isOpen={isOpen} navbar>
             <Nav className="mr-auto" navbar>
-              <NavItem onClick={() => activeNavLink('doctor-list')}
+              <NavItem 
+              // onClick={() => activeNavLink('doctor-list')}
               className={classes.NavbarItem}>
-                <Link to="/doctor-list" 
-                  className={activeLink==='doctor-list'? 
-                  [classes.NavbarLink,classes.active].join(' ') :
-                  classes.NavbarLink}
+                <NavLink to="/doctor-list" 
+                  activeClassName={classes.active}
+                  // className={activeLink==='doctor-list'? 
+                  // [classes.NavbarLink,classes.active].join(' ') :
+                  className={classes.NavbarLink}
                   >
                       Doctor List
-                </Link>
+                </NavLink>
               </NavItem>
-              <NavItem onClick={() => activeNavLink('add-doctor')}
+              <NavItem 
+              // onClick={() => activeNavLink('add-doctor')}
               className={classes.NavbarItem}>
-                <Link to="/add-doctor" 
-                  className={activeLink==='add-doctor'? 
-                  [classes.NavbarLink,classes.active].join(' ') :
-                  classes.NavbarLink}
+                <NavLink to="/add-doctor" 
+                  activeClassName={classes.active}
+                  // className={activeLink==='add-doctor'? 
+                  // [classes.NavbarLink,classes.active].join(' ') :
+                  className={classes.NavbarLink}
                   >
                       Add Doctor
-                </Link>
+                </NavLink>
               </NavItem>
-              <NavItem onClick={() => activeNavLink('added-doctor-list')}
+              <NavItem 
+              // onClick={() => activeNavLink('added-doctor-list')}
               className={classes.NavbarItem}>
-                <Link to="/added-doctor-list" 
-                  className={activeLink==='added-doctor-list'? 
-                  [classes.NavbarLink,classes.active].join(' ') :
-                  classes.NavbarLink}
+                <NavLink to="/added-doctor-list" 
+                  activeClassName={classes.active}
+                  // className={activeLink==='added-doctor-list'? 
+                  // [classes.NavbarLink,classes.active].join(' ') :
+                  className={classes.NavbarLink}
                   >
                       Added Doctor
-                </Link>
+                </NavLink>
               </NavItem>
             </Nav>
           </Collapse>
