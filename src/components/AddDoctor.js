@@ -6,25 +6,45 @@ import {
 import AddDoctorDetails from './AddDoctorDetails';
 import AddDoctorTiming from './AddDoctorTiming';
 import classes from '../styles/AddDoctor.module.css';
+import { toggleTab } from '../redux/actions/toggle-tab';
+import { addDoctorFormReset } from '../redux/actions/add-doctor-form-reset';
+import { connect } from 'react-redux';
 
-export default class AddDoctor extends Component {
+class AddDoctor extends Component {
 
-    state = {
-        activeTab: '1'
+    componentDidMount() {
+      const { activeTab, doctorDetails, toggleTab,addDoctorFormReset } = this.props;
+
+      if(Object.keys(doctorDetails).length) {
+          addDoctorFormReset()
+      } else {
+          if(activeTab==='2' && !Object.keys(doctorDetails).length) {
+            toggleTab('1')
+          }
+      }
     }
 
     toggle = tab => {
-        if(this.state.activeTab !== tab) this.setState({activeTab:tab});
+        const { activeTab, doctorDetails, toggleTab } = this.props;
+        // console.log(doctorDetails)
+        // toggleTab(tab)
+        if(doctorDetails && Object.keys(doctorDetails).length) {
+            if(activeTab !== tab) toggleTab(tab)
+        } else {
+            if(activeTab !== tab) alert('Fill Add Doctor Details form first')
+        }
     }
 
     render() {
+
+        const { activeTab } = this.props;
 
         return (
             <div className="container">
             <Nav tabs className={classes.AddDoctorNavHeader}>
               <NavItem className={classes.AddDoctorNavItem}>
                 <NavLink
-                  className={[this.state.activeTab === '1' ? classes.activeTab : '',classes.AddDoctorNavLink].join(' ')}
+                  className={[activeTab === '1' ? classes.activeTab : '',classes.AddDoctorNavLink].join(' ')}
                   onClick={() => { this.toggle('1'); }}
                 >
                 Add Doctor Details
@@ -32,14 +52,14 @@ export default class AddDoctor extends Component {
               </NavItem>
               <NavItem className={classes.AddDoctorNavItem}>
                 <NavLink
-                  className={[this.state.activeTab === '2' ? classes.activeTab : '',classes.AddDoctorNavLink].join(' ')}
+                  className={[activeTab === '2' ? classes.activeTab : '',classes.AddDoctorNavLink].join(' ')}
                   onClick={() => { this.toggle('2'); }}
                 >
                 Add Doctor Timing
                 </NavLink>
               </NavItem>
             </Nav>
-            <TabContent activeTab={this.state.activeTab}>
+            <TabContent activeTab={activeTab}>
               <TabPane tabId="1">
                 
                 <AddDoctorDetails />
@@ -55,3 +75,19 @@ export default class AddDoctor extends Component {
         )
     }
 }
+
+const mapStateToProps = state => {
+  return {
+    activeTab: state.addDoctor.activeTab,
+    doctorDetails: state.addDoctor.doctorDetails
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    toggleTab: (tabNumber) => dispatch(toggleTab(tabNumber)),
+    addDoctorFormReset: () => dispatch(addDoctorFormReset())
+  }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(AddDoctor)

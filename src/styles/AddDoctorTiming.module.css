@@ -36,10 +36,11 @@
 .timeSubmitBtn {
     background-color: blueviolet;
     color: white;
-    width: 100px;
+    width: 120px;
     padding: 5px;
     margin-bottom: 40px;
     border-radius: 20px;
+    border: none;
 }
 
 .timeSubmitBtn:hover {

@@ -1,0 +1,27 @@
+.Doctor__time__btn {
+    background-color:#ccc;
+    border: none;
+    border-radius: 8px;
+    padding: 4px 12px 4px 12px;
+}
+
+.Doctor__time__btn:hover {
+    background-color:lightblue;
+}
+
+.Doctor__time__btn:active, .Doctor__time__btn:focus {
+    border: none;
+    outline: none;
+    box-shadow: none;
+}
+
+.HeaderText {
+    text-align: center;
+    padding: 20px 20px 0 20px;
+    color: rgb(9, 216, 243);
+}
+
+.DoctorList__Table {
+    padding: 0px 20px 20px 20px;
+
+}

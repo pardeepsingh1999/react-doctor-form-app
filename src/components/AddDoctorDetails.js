@@ -4,8 +4,11 @@ import {
 } from 'reactstrap';
 import classes from '../styles/AddDoctorDetails.module.css';
 import { makeGetRequest } from '../https/http-service';
+import { connect } from 'react-redux';
+import { addDoctorDetails } from '../redux/actions/add-doctor-details';
+import { v4 as uuidv4 } from 'uuid';
 
-export default class AddDoctorDetails extends Component {
+class AddDoctorDetails extends Component {
 
     state = {
         doctorDetials: {
@@ -66,14 +69,14 @@ export default class AddDoctorDetails extends Component {
     }
 
     _handleOnChange = (field, value) => {
-        console.log(field, value)
+        // console.log(field, value)
         const { doctorDetials, isDirty } = this.state;
         if(typeof value === 'number' && !value) {
             doctorDetials[field] = '';
             isDirty[field] = true
             this.setState({ doctorDetials, isDirty }, () => {
                 this._validateForm();
-                console.log(this.state)
+                // console.log(this.state)
             });
             return;
         }
@@ -89,7 +92,7 @@ export default class AddDoctorDetails extends Component {
         isDirty[field] = true
         this.setState({ doctorDetials, isDirty }, () => {
             this._validateForm();
-            console.log(this.state)
+            // console.log(this.state)
         });
     }
 
@@ -301,6 +304,11 @@ export default class AddDoctorDetails extends Component {
                 const { doctorDetials } = this.state;
                 // doctorDetials['speciality'] = specialties.find(e => e.id === this.state.doctorDetials.speciality)
                 console.log("Make API call: ", doctorDetials);
+                const obj = {
+                    id: uuidv4(),
+                    ...doctorDetials
+                }
+                this.props.addDoctorDetails(obj)
           }
         });
     };
@@ -555,3 +563,17 @@ export default class AddDoctorDetails extends Component {
         )
     }
 }
+
+// const mapStateToProps = state => {
+//     return {
+//       doctorDetails: state.addDoctor.doctorDetails
+//     }
+// }
+  
+const mapDispatchToProps = dispatch => {
+    return {
+        addDoctorDetails: (doctorDetailsObj) => dispatch(addDoctorDetails(doctorDetailsObj))
+    }
+}
+  
+export default connect(null,mapDispatchToProps)(AddDoctorDetails)

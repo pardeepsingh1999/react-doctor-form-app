@@ -28,6 +28,8 @@
     padding: 5px;
     margin-bottom: 30px;
     border-radius: 20px;
+    border: none;
+
 }
 
 .formSubmitBtn:hover {
@@ -44,4 +46,25 @@
 .validationError {
     color: red;
     font-weight: 500;
+}
+
+.formResetBtn {
+    background-color: rgb(228, 84, 84);
+    color: white;
+    width: 100px;
+    padding: 5px;
+    margin-bottom: 30px;
+    border-radius: 20px;
+    border: none;
+}
+
+.formResetBtn:hover {
+    background-color: red;
+    font-weight: 600;
+}
+
+.formResetBtn:focus, .formResetBtn:active {
+    box-shadow: none !important;
+    outline: none !important;
+    outline-style: none !important;
 }

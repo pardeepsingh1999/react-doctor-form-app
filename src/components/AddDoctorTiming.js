@@ -1,9 +1,12 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import { Button, FormGroup, Input } from 'reactstrap';
+import { addDoctorTiming } from '../redux/actions/add-doctor-timing';
 
 import classes from '../styles/AddDoctorTiming.module.css';
 
-export default class AddDoctorTiming extends Component {
+class AddDoctorTiming extends Component {
     state = {
         timingLabels: [
             { label:'08:00 AM', value:8  },
@@ -49,9 +52,9 @@ export default class AddDoctorTiming extends Component {
         let stateUpdate = true;
 
         if(value.from==='' || value.from) {
-            console.log(value)
+            // console.log(value)
             doctorTiming[day][index].from = value.from;
-            if(doctorTiming[day][index].from === doctorTiming[day][index].to) {
+            if(doctorTiming[day][index].from >= doctorTiming[day][index].to) {
                 doctorTiming[day][index].to = '';
             }
         } else if(value.to==='' || value.to) {
@@ -247,8 +250,14 @@ export default class AddDoctorTiming extends Component {
                   const { doctorTiming } = this.state;
                   // doctorDetials['speciality'] = specialties.find(e => e.id === this.state.doctorDetials.speciality)
                   console.log("Make API call: ", doctorTiming);
+                  this.props.addDoctorTiming(doctorTiming)
+                  this._handleRedirectToListUrl()
             }
           });
+    }
+
+    _handleRedirectToListUrl = () => {
+      this.props.history.push('/added-doctor-list')
     }
 
     _handleTimingddStructure = (day, index, value) => {
@@ -515,7 +524,7 @@ export default class AddDoctorTiming extends Component {
                     <div>
                         <button onClick={this._handleSubmitTimingData}
                         className={[classes.timeSubmitBtn,'float-right'].join(' ')}>
-                            Save
+                            Add Doctor
                         </button>
                     </div>
 
@@ -524,3 +533,17 @@ export default class AddDoctorTiming extends Component {
         )
     }
 }
+
+// const mapStateToProps = state => {
+//     return {
+//       doctorDetails: state.addDoctor.doctorDetails
+//     }
+// }
+  
+const mapDispatchToProps = dispatch => {
+    return {
+        addDoctorTiming: (doctorTimingObj) => dispatch(addDoctorTiming(doctorTimingObj))
+    }
+}
+  
+export default withRouter(connect(null,mapDispatchToProps)(AddDoctorTiming))
