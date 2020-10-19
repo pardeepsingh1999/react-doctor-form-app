@@ -105,15 +105,13 @@ function App() {
             
             <Switch>
 
-              <Route exact path="/" render={() => <Redirect to="/" />} />
+              <Route exact path="/" render={() => <Redirect to="/doctor-list" />} />
 
               <Route path="/doctor-list" component={DoctorList} />
                   
               <Route path="/add-doctor" component={AddDoctor} />
                 
               <Route path="/added-doctor-list" component={AddedDoctorList} />
-
-              {/* <Route path="/preview/:gifId" component={PreviewUploadGif} /> */}
 
               <Route component={Error} />
 
