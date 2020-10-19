@@ -3,10 +3,10 @@ import {
     Form, FormGroup, Label, Input,
 } from 'reactstrap';
 import classes from '../styles/AddDoctorDetails.module.css';
-import { makeGetRequest } from '../https/http-service';
 import { connect } from 'react-redux';
 import { addDoctorDetails } from '../redux/actions/add-doctor-details';
 import { v4 as uuidv4 } from 'uuid';
+import { getSpecialtyList } from '../https/http-calls';
 
 class AddDoctorDetails extends Component {
 
@@ -52,11 +52,13 @@ class AddDoctorDetails extends Component {
     }
 
     componentDidMount() {
-        makeGetRequest(
-            'http://178.128.127.115:3000/admin/v1/specialties',
-            true,
-            null
-        )
+
+        this._getSpecialtyList()
+        
+    }
+
+    _getSpecialtyList() {
+        getSpecialtyList()
         .then(res => {
             console.log('get specialties res: ', res)
             
