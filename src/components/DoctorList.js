@@ -1,17 +1,15 @@
 import React, { Component } from 'react'
 import classes from '../styles/DoctorList.module.css';
-import TablePagination from '@material-ui/core/TablePagination';
-import { getDoctorList } from '../https/http-calls';
 import DoctorListTiming from './DoctorListTiming';
 import TableGenerator from './TableGenerator';
+import { doctorApiCall } from '../redux/actions/doctorApiCall';
+import { connect } from 'react-redux';
 
-export default class DoctorList extends Component {
+class DoctorList extends Component {
 
     state = {
-        page: 0,
+        page: 1,
         rowsPerPage: 10,
-        totalCount: 0,
-        doctors: [],
         loading: false
     }
 
@@ -30,50 +28,23 @@ export default class DoctorList extends Component {
     }
 
     _getDoctorList(bodyPaginateData) {
-        getDoctorList(bodyPaginateData)
-        .then(res => {
-            console.log('server res: ', res)
-            
-            res.doctors.forEach( e => {
-                if(e.availability && e.availability.length) {
-                    let doctorTiming = {
-                        monday: [],
-                        tuesday: [],
-                        wednesday: [],
-                        thursday: [],
-                        friday: [],
-                        saturday: [],
-                        sunday: []
-                    }
-                    e.availability.forEach(ee => {
-                        doctorTiming[ee.day.toLowerCase()].push({from:ee.from,to:ee.to})
-                    })
-                    e.availability = doctorTiming;
-                }
-            })
-            
-            const obj = {
-                doctors: res.doctors,
-                totalCount:res.totalCount,
-                loading:false
-            }
-            this.setState(obj,() => {console.log(this.state)});
-        })
-        .catch(err => {
-            console.log('DoctorListComponent server error: ',err)
-            alert('something went wrong')
-            this.setState({loading:false})
-        })
+
+        const { doctorApiCall } = this.props;
+
+        doctorApiCall(bodyPaginateData)
+
+        this.setState({loading:false})
+
     }
 
-    handleChangePage = (event, newPage) => {
+    _handleChangePage = (newPage) => {
 
         this.setState({page:newPage,loading:true},()=>{
 
             const {page,rowsPerPage} = this.state;
 
             const paginateData = {
-                pageNumber: page+1, 
+                pageNumber: page, 
                 pageSize: rowsPerPage,  
                 filters: {}
             }
@@ -83,10 +54,10 @@ export default class DoctorList extends Component {
         });
     };
 
-    handleChangeRowsPerPage = (event) => {
+    _handleChangeRowsPerPage = (rowsPerPageCount) => {
         const obj = {
-            page: 0,
-            rowsPerPage: parseInt(event.target.value),
+            page: 1,
+            rowsPerPage: parseInt(rowsPerPageCount),
             loading: true
         }
         this.setState(obj,() => {
@@ -104,74 +75,75 @@ export default class DoctorList extends Component {
         });
     };
 
-    _locationFormatter = (cell, row) => {
-
-        if(!cell || 
-            ( 
-                !cell.streetAddress && 
-                !cell.city && 
-                !cell.state
-            )
-        ) {
-            return 'N/A'
-        }
-
-        return <>
-            {cell.streetAddress ? cell.streetAddress+' ' : ''}
-            {cell.city ? cell.city+' ' : ''}
-            {cell.state ? cell.state : ''}
-        </>
-    }
-
-    _availabilityFormatter = (cell, row) => {
-
-        if(!cell || cell.length===0) {
-            return 'Not provided yet!'
-        }
-
-        const obj = {
-            id: row.id,
-            availability: cell
-        }
-                 
-        return <>
-            <button id={'availability_'+row.id}
-            className={classes.Doctor__time__btn}>
-                <i className="far fa-eye"></i> See
-            </button>
-            <DoctorListTiming key={row.id} data={obj} />
-        </>
-    }
-
-    _isActiveFormatter = (cell, row) => {
-        if(cell) {
-            return 'Active'
-        } else {
-            return 'Inactive'
-        }
-    }
-
-    _feeFormatter = (cell, row) => {
-        if(cell) {
-            return `${cell} INR`
-        } else {
-            return 'N/A'
-        }
-    }
-
-    _specialtyFormatter = (cell, row) => {
-        if(cell) {
-            return cell.name;
-        } else {
-            return 'N/A'
-        }
-    }
-
-    _nameFormatter = (cell, row) => {
-        if(cell.trim()) {
-            return cell;
-        } else {
-            return 'N/A'
+    _doctorTableFormatter = (cell, row, type) => {
+        switch(type) {
+            case 'name': {
+                if(cell.trim()) {
+                    return cell;
+                } else {
+                    return 'N/A'
+                }
+            }
+            case 'location': {
+                if(!cell || 
+                    ( 
+                        !cell.streetAddress && 
+                        !cell.city && 
+                        !cell.state
+                    )
+                ) {
+                    return 'N/A'
+                }
+        
+                return <>
+                    {cell.streetAddress ? cell.streetAddress+' ' : ''}
+                    {cell.city ? cell.city+' ' : ''}
+                    {cell.state ? cell.state : ''}
+                </>
+            }
+            case 'speciality': {
+                if(cell) {
+                    return cell.name;
+                } else {
+                    return 'N/A'
+                }
+            }
+            case 'fee': {
+                if(cell) {
+                    return `${cell} INR`
+                } else {
+                    return 'N/A'
+                }
+            }
+            case 'availability': {
+                if(!cell || cell.length===0) {
+                    return 'Not provided yet!'
+                }
+        
+                const obj = {
+                    id: row.id,
+                    availability: cell
+                }
+                         
+                return <>
+                    <button id={'availability_'+row.id}
+                    className={classes.Doctor__time__btn}>
+                        <i className="far fa-eye"></i> See
+                    </button>
+                    <DoctorListTiming key={row.id} data={obj} />
+                </>
+            }
+            case 'status': {
+                if(cell) {
+                    return 'Active'
+                } else {
+                    return 'Inactive'
+                }
+            }
+            default: {
+                console.log('doctorTableFormatter type not match')
+                break;
+            }
         }
     }
 
@@ -181,21 +153,57 @@ export default class DoctorList extends Component {
             return <img src={require('../assets/loader.gif')} alt="loader" className={classes.DoctorListLoader} />
         }
 
-        const {page,rowsPerPage,totalCount,doctors} = this.state;
+        const {doctorApiResponse} = this.props;
 
-        const tableHeaderList = [
-            { dataField: 'name.full', text: 'Name', formatter: this._nameFormatter },
+        let doctors = [], totalCount = 0;
+
+        if(doctorApiResponse && Object.keys(doctorApiResponse).length>0) {
+            if(doctorApiResponse.error) {
+                alert('somthing went wrong')
+                return <>somthing went wrong</>;
+            } else {
+                doctors = doctorApiResponse.doctors
+                totalCount = doctorApiResponse.totalCount
+            }
+        }
+
+        const {page,rowsPerPage} = this.state;
+
+        const doctorTableHeaderList = [
+            { dataField: 'name.full', text: 'Name', 
+            formatter: (cell, row)=>this._doctorTableFormatter(cell, row, 'name') },
+
             { dataField: 'email', text: 'Email' },
             { dataField: 'phone', text: 'Phone' },
-            { dataField: 'location', text: 'Location', formatter: this._locationFormatter },
-            { dataField: '_specialty', text: 'Speciality', formatter: this._specialtyFormatter },
-            { dataField: 'fee', text: 'Consult Fees', formatter: this._feeFormatter },
+
+            { dataField: 'location', text: 'Location', 
+            formatter: (cell, row)=>this._doctorTableFormatter(cell, row, 'location') },
+
+            { dataField: '_specialty', text: 'Speciality', 
+            formatter: (cell, row)=>this._doctorTableFormatter(cell, row, 'speciality') },
+
+            { dataField: 'fee', text: 'Consult Fees', 
+            formatter: (cell, row)=>this._doctorTableFormatter(cell, row, 'fee') },
+
             { dataField: 'totalAppointment', text: 'Consults' },
-            { dataField: 'availability', text: 'Schedule', formatter: this._availabilityFormatter },
-            { dataField: 'isActive', text: 'Status', formatter: this._isActiveFormatter },
+
+            { dataField: 'availability', text: 'Schedule', 
+            formatter: (cell, row)=>this._doctorTableFormatter(cell, row, 'availability') },
+
+            { dataField: 'isActive', text: 'Status', 
+            formatter: (cell, row)=>this._doctorTableFormatter(cell, row, 'status') },
         ]
 
-        const data = {columns:tableHeaderList,products:doctors}
+        const tableGeneratorData = {
+            columns:doctorTableHeaderList,
+            products:doctors,
+            page:page,
+            rowsPerPage:rowsPerPage,
+            totalCount:totalCount,
+            pagination: true,
+            _handleChangeRowsPerPage: this._handleChangeRowsPerPage,
+            _handleChangePage: this._handleChangePage
+        }
 
         return (
             <div className={classes.Main__DoctorList__Body}>
@@ -209,20 +217,10 @@ export default class DoctorList extends Component {
                             <div className={classes.DoctorList__Table}>
                             <hr />
 
-                            <TableGenerator data={data} />
+                            <TableGenerator data={tableGeneratorData} />
 
                             </div>
 
-                            <div className={classes.DoctorList__Table__Pagination}>
-                                <TablePagination
-                                component="div"
-                                count={totalCount}
-                                page={page}
-                                onChangePage={this.handleChangePage}
-                                rowsPerPage={rowsPerPage}
-                                onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                                />
-                            </div>
                         </>
                     ) : <>
                             <hr className="container" />
@@ -234,3 +232,17 @@ export default class DoctorList extends Component {
         )
     }
 }
+
+const mapStateToProps = state => {
+    return {
+      doctorApiResponse: state.doctorApiCall.apiResponse
+    }
+}
+  
+const mapDispatchToProps = dispatch => {
+    return {
+        doctorApiCall: (bodyPaginateData) => dispatch(doctorApiCall(bodyPaginateData))
+    }
+}
+  
+export default connect(mapStateToProps,mapDispatchToProps)(DoctorList)

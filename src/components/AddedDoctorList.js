@@ -6,69 +6,63 @@ import classes from '../styles/AddedDoctorList.module.css'
 
 class AddedDoctorList extends Component {
 
-    _availabilityFormatter = (cell, row) => {
+    _doctorTableFormatter = (cell, row, type) => {
+        switch(type) {
+            case 'name': {
+                if(cell.trim()) {
+                    return cell;
+                } else {
+                    return 'N/A'
+                }
+            }
+            case 'totalAppointment': {
+                if(!cell) return '0';
 
-        if(!cell || cell.length===0) {
-            return 'Not provided yet!'
-        }
-
-        const obj = {
-            id: row.id,
-            availability: cell
-        }
-                 
-        return <>
-            <button id={'availability_'+row.id}
-            className={classes.Doctor__time__btn}>
-                <i className="far fa-eye"></i> See
-            </button>
-            <DoctorListTiming key={row.id} data={obj} />
-        </>
-    }
-
-    _isActiveFormatter = (cell, row) => {
-        if(cell) {
-            return 'Active'
-        } else {
-            return 'Inactive'
-        }
-    }
-
-    _feeFormatter = (cell, row) => {
-        if(cell) {
-            return `${cell} INR`
-        } else {
-            return 'N/A'
-        }
-    }
-
-    _specialtyFormatter = (cell, row) => {
-        if(cell) {
-            return cell;
-        } else {
-            return 'N/A'
-        }
-    }
-
-    _nameFormatter = (cell, row) => {
-        if(cell.trim()) {
-            return cell;
-        } else {
-            return 'N/A'
-        }
-    }
-
-    _totalAppointmentFormatter = (cell, row) => {
-        if(!cell) return '0';
-
-        return cell;
-    }
-
-    _feeFormatter = (cell, row) => {
-        if(cell) {
-            return `${cell} INR`
-        } else {
-            return 'N/A'
+                return cell;
+            }
+            case 'speciality': {
+                if(cell) {
+                    return cell;
+                } else {
+                    return 'N/A'
+                }
+            }
+            case 'fee': {
+                if(cell) {
+                    return `${cell} INR`
+                } else {
+                    return 'N/A'
+                }
+            }
+            case 'availability': {
+                if(!cell || cell.length===0) {
+                    return 'Not provided yet!'
+                }
+        
+                const obj = {
+                    id: row.id,
+                    availability: cell
+                }
+                         
+                return <>
+                    <button id={'availability_'+row.id}
+                    className={classes.Doctor__time__btn}>
+                        <i className="far fa-eye"></i> See
+                    </button>
+                    <DoctorListTiming key={row.id} data={obj} />
+                </>
+            }
+            case 'status': {
+                if(cell) {
+                    return 'Active'
+                } else {
+                    return 'Inactive'
+                }
+            }
+            default: {
+                console.log('doctorTableFormatter type not match')
+                break;
+            }
         }
     }
 
@@ -76,18 +70,34 @@ class AddedDoctorList extends Component {
 
         const { doctorList } = this.props;
 
-        const tableHeaderList = [
-            { dataField: 'name', text: 'Name', formatter: this._nameFormatter },
+        const doctorTableHeaderList = [
+            { dataField: 'name', text: 'Name', 
+            formatter: (cell, row)=>this._doctorTableFormatter(cell, row, 'name') },
+
             { dataField: 'email', text: 'Email' },
             { dataField: 'phone', text: 'Phone' },
-            { dataField: 'speciality', text: 'Speciality', formatter: this._specialtyFormatter },
-            { dataField: 'fee', text: 'Consult Fees', formatter: this._feeFormatter },
-            { dataField: 'totalAppointment', text: 'Consults', formatter: this._totalAppointmentFormatter },
-            { dataField: 'availability', text: 'Schedule', formatter: this._availabilityFormatter },
-            { dataField: 'isActive', text: 'Status', formatter: this._isActiveFormatter },
+
+            { dataField: 'speciality', text: 'Speciality', 
+            formatter: (cell, row)=>this._doctorTableFormatter(cell, row, 'speciality') },
+
+            { dataField: 'fee', text: 'Consult Fees', 
+            formatter: (cell, row)=>this._doctorTableFormatter(cell, row, 'fee') },
+
+            { dataField: 'totalAppointment', text: 'Consults',
+            formatter: (cell, row)=>this._doctorTableFormatter(cell, row, 'totalAppointment') },
+
+            { dataField: 'availability', text: 'Schedule', 
+            formatter: (cell, row)=>this._doctorTableFormatter(cell, row, 'availability') },
+
+            { dataField: 'isActive', text: 'Status', 
+            formatter: (cell, row)=>this._doctorTableFormatter(cell, row, 'status') },
         ]
 
-        const data = {columns:tableHeaderList,products:doctorList}
+        const tableGeneratorData = {
+            columns:doctorTableHeaderList,
+            products:doctorList,
+            pagination: false
+        }
  
         return (
             <div className={classes.Main__DoctorList__Body}>
@@ -101,7 +111,7 @@ class AddedDoctorList extends Component {
                             <div className={classes.DoctorList__Table}>
                             <hr />
                                 
-                            <TableGenerator data={data} />
+                            <TableGenerator data={tableGeneratorData} />
 
                             </div>
                         </>

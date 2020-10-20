@@ -1,25 +1,30 @@
-import { createStore, combineReducers } from 'redux';
+import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
+import thunk from 'redux-thunk';
 
-import { addDoctorReducer } from './reducers';
+import { addDoctorReducer, doctorApiCallReducer } from './reducers';
 
 const rootReducers = combineReducers({
-    addDoctor: addDoctorReducer
+    addDoctor: addDoctorReducer,
+    doctorApiCall: doctorApiCallReducer
 });
 
 const persistConfig = {
     key: 'root',
     storage,
     keyPrefix: '',
-    whitelist: ['addDoctor']
+    blacklist: ['doctorApiCall']
 };
 
 const pReducer = persistReducer(persistConfig, rootReducers)
 
+const middleware = applyMiddleware(thunk);
+
 export const store = createStore(
     pReducer,
-    undefined
+    undefined,
+    middleware
 )
 
 export const persistor = persistStore(store)
