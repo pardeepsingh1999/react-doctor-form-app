@@ -21,7 +21,7 @@ const TableGenerator = (props) => {
         </span>
     );
 
-    console.log('page',page)
+    // console.log('page',page)
 
     const options = {
         page:page,
@@ -71,6 +71,8 @@ const TableGenerator = (props) => {
                         data={ products } 
                         columns={ columns } 
                         pagination={ paginationFactory(options) }
+                        remote={true}
+                        onTableChange={() => {}}
                     />
                 ) : (
                     <BootstrapTable 

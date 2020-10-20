@@ -27,11 +27,11 @@ class DoctorList extends Component {
 
     }
 
-    _getDoctorList(bodyPaginateData) {
+    _getDoctorList = async(bodyPaginateData) => {
 
         const { doctorApiCall } = this.props;
 
-        doctorApiCall(bodyPaginateData)
+        await doctorApiCall(bodyPaginateData)
 
         this.setState({loading:false})
 
