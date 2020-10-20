@@ -67,9 +67,7 @@ export const addDoctorReducer = (state = initialState, action) => {
 
             break;
         }
-        default: {
-            console.log('error: action type not match in addDoctorReducer')
-        }
+        default: {}
     }
 
     return state;

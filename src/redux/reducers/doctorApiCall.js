@@ -7,7 +7,7 @@ const initialState = {
 }
 
 export const doctorApiCallReducer = (state = initialState, action) => {
-console.log(action)
+
     switch(action.type) {
         case DOCTOR_API_CALL: {
             state = {
@@ -16,9 +16,7 @@ console.log(action)
             }
             break;
         }
-        default: {
-            console.log('error: action type not match in doctorApiCallReducer')
-        }
+        default: {}
     }
 
     return state;
